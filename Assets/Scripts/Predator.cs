@@ -8,11 +8,11 @@ public class Predator : Agent
         // Start with random velocity
         this.velocity = new Vector2(Random.Range(-5, 5), Random.Range(-5, 5));
 
-		// Get configuration
-		this.config = this.GetComponent<AgentConfig>();
+        // Get configuration
+        this.config = this.GetComponent<AgentConfig>();
 
-		// set layers
-		this.setLayers();
+        // set layers
+        base.setLayers();
     }
 
     /// <summary>
@@ -21,7 +21,14 @@ public class Predator : Agent
     /// <returns>Vector with correct behavior</returns>
     public override Vector2 Combine()
     {
-        return base.config.CohesionWeight * base.Cohesion()
-			 + base.config.SeparationWeight * base.Separation();
+		// Get all prey
+		Collider2D[] prey = Physics2D.OverlapCircleAll(this.transform.position, this.config.SearchRadius, base.agentLayer);
+
+		// Get all neighbors
+		Collider2D[] neighbors = Physics2D.OverlapCircleAll(this.transform.position, this.config.SearchRadius, base.predatorLayer);
+
+        return base.config.CohesionWeight * base.Cohesion(ref prey)
+             + base.config.WanderWeight * base.Wander()
+             + base.config.SeparationWeight * base.Separation(ref neighbors);
     }
 }

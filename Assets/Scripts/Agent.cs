@@ -72,13 +72,10 @@ public class Agent : MonoBehaviour
     /// Go to center of neighbors
     /// </summary>
     /// <returns>Center Point</returns>
-    public Vector2 Cohesion()
+    public Vector2 Cohesion(ref Collider2D[] neighbors)
     {
         // Cohesion behaavior
         Vector3 result = new Vector3();
-        
-        // Get all neighbors
-		Collider2D[] neighbors = Physics2D.OverlapCircleAll(this.transform.position, this.config.CohesionRadius, this.agentLayer);
 
         // check if neighbors is full or not
         if (neighbors.Length > 0)
@@ -113,13 +110,10 @@ public class Agent : MonoBehaviour
     /// Move away from neighbors
     /// </summary>
     /// <returns></returns>
-    public Vector2 Separation()
+    public Vector2 Separation(ref Collider2D[] neighbors)
     {
         // Separation result
         Vector2 result = new Vector3();
-
-        // Get all neighbors
-		Collider2D[] neighbors = Physics2D.OverlapCircleAll(this.transform.position, this.config.SeparationRadius, this.gameObject.layer);
 
         // check if neighbors is full or not
         for (int i = 0; i < neighbors.Length; ++i)
@@ -144,12 +138,9 @@ public class Agent : MonoBehaviour
     /// Rotate in direction of movement
     /// </summary>
     /// <returns></returns>
-    public Vector2 Allignment()
+    public Vector2 Allignment(ref Collider2D[] neighbors)
     {
         Vector2 result = new Vector2();
-
-        // Get all neighbors
-		Collider2D[] neighbors = Physics2D.OverlapCircleAll(this.transform.position, this.config.SeparationRadius, this.gameObject.layer);
 
         // check if neighbors is full or not
         if (neighbors.Length > 0)
@@ -174,7 +165,7 @@ public class Agent : MonoBehaviour
 	{
 		Vector2 result = new Vector3();
 		
-		Collider2D[] enemies = Physics2D.OverlapCircleAll(this.transform.position, this.config.AvoidRadius, this.predatorLayer);
+		Collider2D[] enemies = Physics2D.OverlapCircleAll(this.transform.position, this.config.SearchRadius, this.predatorLayer);
 
 		for (int i = 0; i < enemies.Length; ++i)
 		{
@@ -196,7 +187,7 @@ public class Agent : MonoBehaviour
 		this.WanderTarget += new Vector3(this.randomBinomial() * jitter, this.randomBinomial() * jitter, 0);
 		
 		this.WanderTarget.Normalize();
-		this.WanderTarget *= this.config.WanderRadius;
+		this.WanderTarget *= this.config.SearchRadius;
 		Vector3 targetInLocalSpace = this.WanderTarget + new Vector3(0, 0, this.config.WanderDistanceRadius);
 		Vector3 targetInWorldSpace = this.transform.TransformPoint(targetInLocalSpace);
 		return (targetInWorldSpace - this.transform.position).normalized;
@@ -208,9 +199,12 @@ public class Agent : MonoBehaviour
     /// <returns>Vector with correct behavior</returns>
     public virtual Vector2 Combine()
     {
-        return this.config.CohesionWeight * this.Cohesion() 
-             + this.config.SeparationWeight * this.Separation()
-             + this.config.AllignmentWeight * this.Allignment()
+		// Get all neighbors
+		Collider2D[] neighbors = Physics2D.OverlapCircleAll(this.transform.position, this.config.SearchRadius, this.gameObject.layer);
+
+        return this.config.CohesionWeight * this.Cohesion(ref neighbors) 
+             + this.config.SeparationWeight * this.Separation(ref neighbors)
+             + this.config.AllignmentWeight * this.Allignment(ref neighbors)
 //             + this.config.WanderWeight * this.Wander()
 			 + this.config.AvoidWeight * this.AvoidEnemies();
     }

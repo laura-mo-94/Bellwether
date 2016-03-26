@@ -4,6 +4,7 @@ using System.Collections;
 public class MateWithAgent : MonoBehaviour 
 {
 	public int secondsToMate = 60;
+	public int matingLifeTime = 2;
 
 	private int matingMultiplier = 1;
 	private bool canMate = false;
@@ -70,6 +71,12 @@ public class MateWithAgent : MonoBehaviour
 				                                     this.GetFrameLife(),
 				                                     col.collider.GetComponent<AgentConfig>(),
 				                                     col.collider.GetComponent<MateWithAgent>().GetFrameLife());
+
+				// Check if reached lifetime
+				if(this.matingMultiplier >= this.matingLifeTime)
+				{
+					Destroy(this.gameObject);
+				}
 			}
 		}
 	}

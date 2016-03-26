@@ -8,11 +8,7 @@ public class AgentConfig : MonoBehaviour
 
     // TODO: add line breaks in inspector and create better names
 	[Header("Find Nearby Radius")]
-    public float CohesionRadius;
-    public float SeparationRadius;
-    public float AllignmentRadius;
-    public float WanderRadius;
-    public float AvoidRadius;
+	public float SearchRadius;
 
 	[Header("Weights for Given Behavior")]
 	public float CohesionWeight;
@@ -39,11 +35,7 @@ public class AgentConfig : MonoBehaviour
 	public void RandomizeSelf()
 	{
 		// Radius
-		this.CohesionRadius = Random.Range(0, AgentConfig.MaxRadius);
-		this.SeparationRadius = Random.Range(0, AgentConfig.MaxRadius);
-		this.AllignmentRadius = Random.Range(0, AgentConfig.MaxRadius);
-		this.WanderRadius = Random.Range(0, AgentConfig.MaxRadius);
-		this.AvoidRadius = Random.Range(0, AgentConfig.MaxRadius);
+		this.SearchRadius = Random.Range(0, AgentConfig.MaxRadius);
 
 		// Weights
 		this.CohesionWeight = Random.Range(0, AgentConfig.MaxWeight);
