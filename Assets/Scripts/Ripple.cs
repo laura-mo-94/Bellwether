@@ -8,6 +8,8 @@ public class Ripple : MonoBehaviour {
 	public float growthRate = 0.051f;
 	public float fadeRate = 0.01f;
 	public float z = 0f;
+	public float pushForce;
+	public int pushSmoothing;
 
 	LineRenderer line;
 	CircleCollider2D col;
@@ -46,7 +48,6 @@ public class Ripple : MonoBehaviour {
 	{
 		while (opacity > 0f)
 		{
-			Debug.Log ("Hi");
 			DrawVertexes();
 			col.radius = radialScale;
 			SetColors();
@@ -76,5 +77,13 @@ public class Ripple : MonoBehaviour {
 	{
 		lineColor.a = opacity;
 		line.SetColors (lineColor, lineColor);
+	}
+
+	void OnTriggerStay2D(Collider2D other)
+	{
+		Vector3 direction = (other.transform.position - this.transform.position).normalized;
+		float magnitude = opacity * pushForce;
+
+		other.transform.position = Vector3.Lerp (other.transform.position, other.transform.position + (direction * magnitude), Time.deltaTime * pushSmoothing);
 	}
 }

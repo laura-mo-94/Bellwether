@@ -169,6 +169,7 @@ public class Agent : MonoBehaviour
 
 		for (int i = 0; i < enemies.Length; ++i)
 		{
+		//	Debug.Log (enemies.Length);
 			result += this.Flee(enemies[i].transform.position);
 		}
 		
@@ -236,6 +237,9 @@ public class Agent : MonoBehaviour
     public Vector2 Flee(Vector3 targ)
     {
         Vector2 desiredVel = (this.transform.position - targ).normalized * this.config.MaxVelocity;
+		Debug.Log (desiredVel - this.velocity);
         return desiredVel - this.velocity;
     }
+
+
 }

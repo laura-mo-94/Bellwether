@@ -25,7 +25,6 @@ public class Touch : MonoBehaviour {
 			GameObject ripOb = GameObject.Instantiate(rippleObject);
 
 			ripples.Add(ripOb.GetComponent<Ripple>());
-			Debug.Log (ripples[i]);
 		}
 	}
 	
@@ -36,9 +35,7 @@ public class Touch : MonoBehaviour {
 			if(ripples.Count > 0)
 			{
 				Ripple newRip = ripples[0];
-				Debug.Log (ripples[0]);
 				ripples.RemoveAt(0);
-				Debug.Log (newRip);
 				newRip.transform.position = (Vector2)cam.ScreenToWorldPoint(Input.mousePosition);
 				newRip.StartRipple();
 			}
