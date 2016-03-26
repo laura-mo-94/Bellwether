@@ -5,6 +5,7 @@ public class AgentConfig : MonoBehaviour
 {
 	public static float MaxRadius = 20;
 	public static float MaxWeight = 300;
+	public static float MaxSpeed = 10;
 
     // TODO: add line breaks in inspector and create better names
 	[Header("Find Nearby Radius")]
@@ -47,5 +48,22 @@ public class AgentConfig : MonoBehaviour
 		// Smooth Movement
 		this.Jitter = Random.Range(0, AgentConfig.MaxWeight);
 		this.WanderDistanceRadius = Random.Range(0, AgentConfig.MaxRadius);
+
+		// Speed
+		this.MaxAcceleration = Random.Range(1, AgentConfig.MaxSpeed);
+		this.MaxVelocity = Random.Range(1, AgentConfig.MaxSpeed);
+	}
+
+	public void SetConfig(AgentConfig newConfig)
+	{
+		// Get fields
+		System.Reflection.FieldInfo[] fields = newConfig.GetType().GetFields();
+		
+		// loop through fields
+		for(int i = 0; i < fields.Length; ++i)
+		{
+			// Set value for field
+			fields[i].SetValue(this, fields[i].GetValue(newConfig));
+		}
 	}
 }

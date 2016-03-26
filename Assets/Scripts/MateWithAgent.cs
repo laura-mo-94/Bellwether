@@ -43,7 +43,7 @@ public class MateWithAgent : MonoBehaviour
 	{
 		while(true)
 		{
-			yield return new WaitForSeconds(this.matingMultiplier * this.secondsToMate);
+			yield return new WaitForSeconds(this.secondsToMate / this.matingMultiplier);
 
 			// Incrmenet and allow agent to mate
 			++this.matingMultiplier;
@@ -86,7 +86,18 @@ public class MateWithAgent : MonoBehaviour
 	/// </summary>
 	void OnDestroy()
 	{
+		// Reduce count
+		if(World.Instance != null)
+		{
+			World.Instance.DecrementAgentCount();
+		}
+
 		// Stop coroutine
 		StopCoroutine(this.AllowToMate());
+	}
+
+	public int GetGeneration()
+	{
+		return this.matingMultiplier;
 	}
 }

@@ -39,6 +39,9 @@ public class CreateBabyAgent : MonoBehaviour
 
 		// Instantiate new agent
 		GameObject agent = Instantiate(this.Agent, birthPosition, Quaternion.identity) as GameObject;
+		
+		// Disable agent
+		agent.gameObject.SetActive(false);
 
 		// Get config of agent
 		AgentConfig newConfig = agent.GetComponent<AgentConfig>();
@@ -47,46 +50,50 @@ public class CreateBabyAgent : MonoBehaviour
 		int componentLikeliHood = frameLifeOne / (frameLifeOne + frameLifeTwo);
 
 		// Get fields of class
-		System.Reflection.FieldInfo[] fields = newConfig.GetType().GetFields();
+		Type test = newConfig.GetType();
+		System.Reflection.FieldInfo[] fields = test.GetFields();
 
 		// loop through fields
 		for(int i = 0; i < fields.Length; ++i)
 		{
-			// Check field
-			if(!fields[i].Name.Equals("MaxAcceleration") && !fields[i].Name.Equals("MaxVelocity"))
-			{
-				// create new value
-				float newVal;
+			// create new value
+			float newVal;
 
-				// Check if gene will mutate
-				if(UnityEngine.Random.Range(0, 100) < this.MutationPercentage)
+			// Check if gene will mutate
+			if(UnityEngine.Random.Range(0, 100) < this.MutationPercentage)
+			{
+				// Check if a radius or weight
+				if(fields[i].Name.Equals("MaxAcceleration") && fields[i].Name.Equals("MaxVelocity"))
 				{
-					// Check if a radius or weight
-					if(fields[i].Name.Contains("Radius"))
-					{
-						newVal = UnityEngine.Random.Range(0, AgentConfig.MaxRadius);
-					}
-					else
-					{
-						newVal = UnityEngine.Random.Range(0, AgentConfig.MaxWeight);
-					}
+					newVal = UnityEngine.Random.Range(1, AgentConfig.MaxSpeed);
+				}
+				else if(fields[i].Name.Contains("Radius"))
+				{
+					newVal = UnityEngine.Random.Range(0, AgentConfig.MaxRadius);
 				}
 				else
 				{
-					// pick new val based on percentage from other
-					if(UnityEngine.Random.Range(0,100) / 100 > componentLikeliHood)
-					{
-						newVal = (float) fields[i].GetValue(configTwo);
-					}
-					else
-					{
-						newVal = (float) fields[i].GetValue(configOne);
-					}
+					newVal = UnityEngine.Random.Range(0, AgentConfig.MaxWeight);
 				}
-
-				// set the value
-				fields[i].SetValue(newConfig, newVal);
 			}
+			else
+			{
+				// pick new val based on percentage from other
+				if(UnityEngine.Random.Range(0,100) / 100 > componentLikeliHood)
+				{
+					newVal = (float) fields[i].GetValue(configTwo);
+				}
+				else
+				{
+					newVal = (float) fields[i].GetValue(configOne);
+				}
+			}
+
+			// set the value
+			fields[i].SetValue(newConfig, newVal);
 		}
+
+		// reactivate agent
+		agent.SetActive(true);
 	}
 }

@@ -33,6 +33,12 @@ public class Agent : MonoBehaviour
         // Start with random velocity
         this.velocity = new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
 
+		if(velocity.x == 0)
+		{
+			this.velocity.x = 3;
+			this.velocity.y = -3;
+		}
+
 		// set layers
 		this.setLayers();
 
@@ -237,7 +243,6 @@ public class Agent : MonoBehaviour
     public Vector2 Flee(Vector3 targ)
     {
         Vector2 desiredVel = (this.transform.position - targ).normalized * this.config.MaxVelocity;
-		Debug.Log (desiredVel - this.velocity);
         return desiredVel - this.velocity;
     }
 

@@ -12,8 +12,8 @@ public class EatPrey : MonoBehaviour
 		// Check tag
 		if(col.collider.transform.CompareTag("Agent"))
 		{
-			// decrement
-			World.Instance.DecrementAgentCount();
+			// generation count
+			World.Instance.AddCheckToGeneration(col.gameObject.GetComponent<MateWithAgent>().GetGeneration());
 
 			// Eat prey
 			Destroy(col.gameObject);
