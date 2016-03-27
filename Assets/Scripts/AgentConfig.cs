@@ -3,9 +3,10 @@ using System.Collections;
 
 public class AgentConfig : MonoBehaviour 
 {
-	public static float MaxRadius = 20;
-	public static float MaxWeight = 300;
-	public static float MaxSpeed = 10;
+	public const float MaxRadius = 20;
+	public const float MaxWeight = 300;
+	public const float MaxSpeed = 10;
+	public const float MaxLifeTime = 5;
 
     // TODO: add line breaks in inspector and create better names
 	[Header("Find Nearby Radius")]
@@ -25,6 +26,9 @@ public class AgentConfig : MonoBehaviour
     [Header ("Smoothing Movement")]
 	public float Jitter;
 	public float WanderDistanceRadius;
+
+	[Header ("Life Time")]
+	public float LifeTime;
 
 	[Header("Vision")]
 	[Tooltip("Unused")]
@@ -48,6 +52,9 @@ public class AgentConfig : MonoBehaviour
 		// Smooth Movement
 		this.Jitter = Random.Range(0, AgentConfig.MaxWeight);
 		this.WanderDistanceRadius = Random.Range(0, AgentConfig.MaxRadius);
+
+		// Life time
+		this.LifeTime = Random.Range(1, AgentConfig.MaxLifeTime);
 
 		// Speed
 		this.MaxAcceleration = Random.Range(1, AgentConfig.MaxSpeed);

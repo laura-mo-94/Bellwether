@@ -50,8 +50,7 @@ public class CreateBabyAgent : MonoBehaviour
 		int componentLikeliHood = frameLifeOne / (frameLifeOne + frameLifeTwo);
 
 		// Get fields of class
-		Type test = newConfig.GetType();
-		System.Reflection.FieldInfo[] fields = test.GetFields();
+		System.Reflection.FieldInfo[] fields = newConfig.GetType().GetFields(System.Reflection.BindingFlags.Public);
 
 		// loop through fields
 		for(int i = 0; i < fields.Length; ++i)
@@ -59,13 +58,16 @@ public class CreateBabyAgent : MonoBehaviour
 			// create new value
 			float newVal;
 
-			// Check if gene will mutate
 			if(UnityEngine.Random.Range(0, 100) < this.MutationPercentage)
 			{
 				// Check if a radius or weight
 				if(fields[i].Name.Equals("MaxAcceleration") && fields[i].Name.Equals("MaxVelocity"))
 				{
 					newVal = UnityEngine.Random.Range(1, AgentConfig.MaxSpeed);
+				}
+				else if(fields[i].Name.Equals("LifeTime"))
+				{
+					newVal = UnityEngine.Random.Range(1, AgentConfig.MaxLifeTime);
 				}
 				else if(fields[i].Name.Contains("Radius"))
 				{

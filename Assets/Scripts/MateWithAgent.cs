@@ -4,7 +4,6 @@ using System.Collections;
 public class MateWithAgent : MonoBehaviour 
 {
 	public int secondsToMate = 60;
-	public int matingLifeTime = 2;
 
 	private int matingMultiplier = 1;
 	private bool canMate = false;
@@ -63,7 +62,7 @@ public class MateWithAgent : MonoBehaviour
 			this.canMate = false;
 
 			// Check tag
-			if(col.collider.transform.CompareTag("Agent"))
+			if(World.Instance.AgentCanMate() && col.collider.transform.CompareTag("Agent"))
 			{
 				// Create child at position with configs
 				CreateBabyAgent.Instance.CreateChild(this.transform.position, 
@@ -73,7 +72,7 @@ public class MateWithAgent : MonoBehaviour
 				                                     col.collider.GetComponent<MateWithAgent>().GetFrameLife());
 
 				// Check if reached lifetime
-				if(this.matingMultiplier >= this.matingLifeTime)
+				if(this.matingMultiplier >= this.config.LifeTime)
 				{
 					Destroy(this.gameObject);
 				}

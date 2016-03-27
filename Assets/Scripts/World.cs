@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class World : MonoBehaviour
 {
     public GameObject AgentPrefab;
+	public int MaxNumberOfAgents = 750;
     public int StartNumberOfAgents;
 
     public Vector2 ScreenBounds;
@@ -124,4 +125,13 @@ public class World : MonoBehaviour
 
         return val;
     }
+
+	/// <summary>
+	/// Agents whehter or not the agent can make
+	/// </summary>
+	/// <returns><c>true</c>, if max number of agents, <c>false</c> otherwise.</returns>
+	public bool AgentCanMate()
+	{
+		return (this.AgentCount < this.MaxNumberOfAgents);
+	}
 }
