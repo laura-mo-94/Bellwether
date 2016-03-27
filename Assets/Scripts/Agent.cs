@@ -51,11 +51,21 @@ public class Agent : MonoBehaviour
     /// </summary>
 	void FixedUpdate ()
     {
+		float additionalVelocity = 0;
+		float additionalAcceleration = 0;
+
+		// Check if this is a predator or prey
+		if(this.gameObject.CompareTag("Agent"))
+		{
+			additionalVelocity = World.Instance.Config.MaxVelocity;
+			additionalAcceleration = World.Instance.Config.MaxAcceleration;
+		}
+
         // Update acceleration
-        this.acceleration = Vector2.ClampMagnitude(this.Combine(), this.config.MaxAcceleration);
+		this.acceleration = Vector2.ClampMagnitude(this.Combine(), (this.config.MaxAcceleration +  additionalAcceleration));
 
         // Euler Forward Integration
-        this.velocity = Vector2.ClampMagnitude(this.velocity + this.acceleration * Time.deltaTime, this.config.MaxVelocity);
+		this.velocity = Vector2.ClampMagnitude(this.velocity + this.acceleration * Time.deltaTime, (this.config.MaxVelocity + additionalVelocity));
 
         // Set new position
         this.transform.position = this.transform.position + (Vector3) (this.velocity * Time.deltaTime);
@@ -171,7 +181,7 @@ public class Agent : MonoBehaviour
 	{
 		Vector2 result = new Vector3();
 		
-		Collider2D[] enemies = Physics2D.OverlapCircleAll(this.transform.position, this.config.SearchRadius, this.predatorLayer);
+		Collider2D[] enemies = Physics2D.OverlapCircleAll(this.transform.position, this.config.SearchRadius + World.Instance.Config.SearchRadius, this.predatorLayer);
 
 		for (int i = 0; i < enemies.Length; ++i)
 		{
@@ -188,14 +198,14 @@ public class Agent : MonoBehaviour
 	/// <returns></returns>
 	public Vector2 Wander()
 	{
-		float jitter = this.config.Jitter * Time.deltaTime;
+		float jitter = (this.config.Jitter + World.Instance.Config.Jitter) * Time.deltaTime;
 		
 		// 
 		this.WanderTarget += new Vector3(this.randomBinomial() * jitter, this.randomBinomial() * jitter, 0);
 		
 		this.WanderTarget.Normalize();
 		this.WanderTarget *= this.config.SearchRadius;
-		Vector3 targetInLocalSpace = this.WanderTarget + new Vector3(0, 0, this.config.WanderDistanceRadius);
+		Vector3 targetInLocalSpace = this.WanderTarget + new Vector3(0, 0, this.config.WanderDistanceRadius + World.Instance.Config.WanderDistanceRadius);
 		Vector3 targetInWorldSpace = this.transform.TransformPoint(targetInLocalSpace);
 		return (targetInWorldSpace - this.transform.position).normalized;
 	}
@@ -207,13 +217,13 @@ public class Agent : MonoBehaviour
     public virtual Vector2 Combine()
     {
 		// Get all neighbors
-		Collider2D[] neighbors = Physics2D.OverlapCircleAll(this.transform.position, this.config.SearchRadius, this.gameObject.layer);
+		Collider2D[] neighbors = Physics2D.OverlapCircleAll(this.transform.position, this.config.SearchRadius + World.Instance.Config.SearchRadius, this.gameObject.layer);
 
-        return this.config.CohesionWeight * this.Cohesion(ref neighbors) 
-             + this.config.SeparationWeight * this.Separation(ref neighbors)
-             + this.config.AllignmentWeight * this.Allignment(ref neighbors)
-//             + this.config.WanderWeight * this.Wander()
-			 + this.config.AvoidWeight * this.AvoidEnemies();
+		return (this.config.CohesionWeight +  World.Instance.Config.CohesionWeight) * this.Cohesion(ref neighbors) 
+             + (this.config.SeparationWeight +  World.Instance.Config.CohesionWeight) * this.Separation(ref neighbors)
+             + (this.config.AllignmentWeight +  World.Instance.Config.AllignmentWeight) * this.Allignment(ref neighbors)
+//             + (this.config.WanderWeight + World.Instance.Config.WanderWeight) * this.Wander()
+			 + (this.config.AvoidWeight + World.Instance.Config.AvoidWeight) * this.AvoidEnemies();
     }
 
     /// <summary>
@@ -242,7 +252,7 @@ public class Agent : MonoBehaviour
     /// <returns></returns>
     public Vector2 Flee(Vector3 targ)
     {
-        Vector2 desiredVel = (this.transform.position - targ).normalized * this.config.MaxVelocity;
+		Vector2 desiredVel = (this.transform.position - targ).normalized * (this.config.MaxVelocity +  World.Instance.Config.MaxVelocity);
         return desiredVel - this.velocity;
     }
 

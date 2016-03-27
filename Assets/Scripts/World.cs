@@ -18,6 +18,9 @@ public class World : MonoBehaviour
 
 	[Header ("Generation Checker")]
 	public float Generation = 0;
+
+	[HideInInspector]
+	public AgentConfig Config;
     
 
     private static World instance = null;
@@ -37,6 +40,7 @@ public class World : MonoBehaviour
     {
 		this.Generation = 0;
         this.AgentCount = 0;
+		this.Config = this.gameObject.GetComponent<AgentConfig>();
         this.Spawn(AgentPrefab, this.StartNumberOfAgents);
     }
 
@@ -66,7 +70,7 @@ public class World : MonoBehaviour
 		++this.killedCount;
 		this.generationCount += generation;
 
-		this.Generation = (float) this.generationCount / (float) this.killedCount;
+		this.Generation = (float) this.generationCount / ((float) this.killedCount + (float) this.AgentCount);
 	}
 
     /// <summary>
