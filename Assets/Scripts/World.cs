@@ -39,9 +39,10 @@ public class World : MonoBehaviour
 
     void Start()
     {
+		Debug.Log ("Config it");
 		this.Generation = 0;
         this.AgentCount = 0;
-		this.Config = this.gameObject.GetComponent<AgentConfig>();
+		this.Config = this.AgentPrefab.GetComponent<AgentConfig>();
         this.Spawn(AgentPrefab, this.StartNumberOfAgents);
     }
 

@@ -51,37 +51,38 @@ public class Agent : MonoBehaviour
     /// </summary>
 	void FixedUpdate ()
     {
-		float additionalVelocity = 0;
-		float additionalAcceleration = 0;
-
-		// Check if this is a predator or prey
-		if(this.gameObject.CompareTag("Agent"))
+		if (Game.instance.State != 0) 
 		{
-			additionalVelocity = World.Instance.Config.MaxVelocity;
-			additionalAcceleration = World.Instance.Config.MaxAcceleration;
+			float additionalVelocity = 0;
+			float additionalAcceleration = 0;
+
+			// Check if this is a predator or prey
+			if (this.gameObject.CompareTag ("Agent")) {
+				additionalVelocity = World.Instance.Config.MaxVelocity;
+				additionalAcceleration = World.Instance.Config.MaxAcceleration;
+			}
+
+			// Update acceleration
+			this.acceleration = Vector2.ClampMagnitude (this.Combine (), (this.config.MaxAcceleration + additionalAcceleration));
+
+			// Euler Forward Integration
+			this.velocity = Vector2.ClampMagnitude (this.velocity + this.acceleration * Time.deltaTime, (this.config.MaxVelocity + additionalVelocity));
+
+			// Set new position
+			this.transform.position = this.transform.position + (Vector3)(this.velocity * Time.deltaTime);
+
+			// Keep agent in world bounds
+			this.transform.position = World.Instance.WrapAround (this.transform.position);
+	        
+			// set allignment
+			if (this.velocity.magnitude > 0) {
+				// get angle towards direction and convert to degrees
+				float angle = Mathf.Atan2 (this.velocity.y, this.velocity.x) * Mathf.Rad2Deg - 90;
+
+				// set rotation
+				transform.rotation = Quaternion.AngleAxis (angle, Vector3.forward);
+			}
 		}
-
-        // Update acceleration
-		this.acceleration = Vector2.ClampMagnitude(this.Combine(), (this.config.MaxAcceleration +  additionalAcceleration));
-
-        // Euler Forward Integration
-		this.velocity = Vector2.ClampMagnitude(this.velocity + this.acceleration * Time.deltaTime, (this.config.MaxVelocity + additionalVelocity));
-
-        // Set new position
-        this.transform.position = this.transform.position + (Vector3) (this.velocity * Time.deltaTime);
-
-        // Keep agent in world bounds
-        this.transform.position = World.Instance.WrapAround(this.transform.position);
-        
-        // set allignment
-        if (this.velocity.magnitude > 0)
-        {
-            // get angle towards direction and convert to degrees
-            float angle = Mathf.Atan2(this.velocity.y, this.velocity.x) * Mathf.Rad2Deg - 90;
-
-            // set rotation
-            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        }
 	}
 
     /// <summary>
