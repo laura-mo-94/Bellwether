@@ -13,6 +13,7 @@ public class EvolutionPointManager : MonoBehaviour {
 	public Slider alignment;
 	public Slider wander;
 	public Slider avoid;
+	public float Multiplier = 50;
 
 	float currentPoints;
 
@@ -53,15 +54,11 @@ public class EvolutionPointManager : MonoBehaviour {
 
 	public void configureFlock()
 	{
-		Debug.Log ("hey");
-		AgentConfig config = World.Instance.Config;
-		config.SeparationWeight = seperation.value;
-		config.CohesionWeight = cohesion.value;
-		config.AllignmentWeight = alignment.value;
-		config.WanderWeight = wander.value;
-		config.AvoidWeight = avoid.value;
-		Debug.Log ("ho");
+		World.Instance.Config.SeparationWeight = seperation.value * this.Multiplier;
+		World.Instance.Config.CohesionWeight = cohesion.value * this.Multiplier;
+		World.Instance.Config.AllignmentWeight = alignment.value * this.Multiplier;
+		World.Instance.Config.WanderWeight = wander.value * this.Multiplier;
+		World.Instance.Config.AvoidWeight = avoid.value * this.Multiplier;
 		Game.instance.State = 1;
-		Debug.Log (Game.instance.State);
 	}
 }

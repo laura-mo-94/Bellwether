@@ -23,7 +23,6 @@ public class World : MonoBehaviour
 	[HideInInspector]
 	public AgentConfig Config;
     
-
     private static World instance = null;
     public static World Instance
     {

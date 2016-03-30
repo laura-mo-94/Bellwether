@@ -51,8 +51,8 @@ public class Agent : MonoBehaviour
     /// </summary>
 	void FixedUpdate ()
     {
-		if (Game.instance.State != 0) 
-		{
+//		if (Game.instance.State != 0) 
+//		{
 			float additionalVelocity = 0;
 			float additionalAcceleration = 0;
 
@@ -82,7 +82,7 @@ public class Agent : MonoBehaviour
 				// set rotation
 				transform.rotation = Quaternion.AngleAxis (angle, Vector3.forward);
 			}
-		}
+//		}
 	}
 
     /// <summary>
