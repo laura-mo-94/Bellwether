@@ -4,8 +4,10 @@ using System.Collections.Generic;
 public class World : MonoBehaviour
 {
     public GameObject AgentPrefab;
-	public int MaxNumberOfAgents = 750;
     public int StartNumberOfAgents;
+
+	public int MaxNumberOfAgents = 150;
+	public int TimeScale;
 
     public Vector2 ScreenBounds;
     public float SpawnRadius;
@@ -133,5 +135,5 @@ public class World : MonoBehaviour
 	public bool AgentCanMate()
 	{
 		return (this.AgentCount < this.MaxNumberOfAgents);
-	}
+	}	
 }

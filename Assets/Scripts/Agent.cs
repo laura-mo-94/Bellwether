@@ -55,7 +55,7 @@ public class Agent : MonoBehaviour
 //		{
 			float additionalVelocity = 0;
 			float additionalAcceleration = 0;
-
+			int timeScale = World.Instance.TimeScale;
 			// Check if this is a predator or prey
 			if (this.gameObject.CompareTag ("Agent")) {
 				additionalVelocity = World.Instance.Config.MaxVelocity;
@@ -66,10 +66,10 @@ public class Agent : MonoBehaviour
 			this.acceleration = Vector2.ClampMagnitude (this.Combine (), (this.config.MaxAcceleration + additionalAcceleration));
 
 			// Euler Forward Integration
-			this.velocity = Vector2.ClampMagnitude (this.velocity + this.acceleration * Time.deltaTime, (this.config.MaxVelocity + additionalVelocity));
+			this.velocity = Vector2.ClampMagnitude (this.velocity + this.acceleration * Time.deltaTime * timeScale, (this.config.MaxVelocity + additionalVelocity));
 
 			// Set new position
-			this.transform.position = this.transform.position + (Vector3)(this.velocity * Time.deltaTime);
+			this.transform.position = this.transform.position + (Vector3)(this.velocity * Time.deltaTime * timeScale);
 
 			// Keep agent in world bounds
 			this.transform.position = World.Instance.WrapAround (this.transform.position);
@@ -199,7 +199,7 @@ public class Agent : MonoBehaviour
 	/// <returns></returns>
 	public Vector2 Wander()
 	{
-		float jitter = (this.config.Jitter + World.Instance.Config.Jitter) * Time.deltaTime;
+		float jitter = (this.config.Jitter + World.Instance.Config.Jitter) * Time.deltaTime * World.Instance.TimeScale;
 		
 		// 
 		this.WanderTarget += new Vector3(this.randomBinomial() * jitter, this.randomBinomial() * jitter, 0);

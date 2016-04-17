@@ -13,6 +13,8 @@ public class EvolutionPointManager : MonoBehaviour {
 	public Slider alignment;
 	public Slider wander;
 	public Slider avoid;
+	public Slider timeScale;
+
 	public float Multiplier = 50;
 
 	float currentPoints;
@@ -59,6 +61,7 @@ public class EvolutionPointManager : MonoBehaviour {
 		World.Instance.Config.AllignmentWeight = alignment.value * this.Multiplier;
 		World.Instance.Config.WanderWeight = wander.value * this.Multiplier;
 		World.Instance.Config.AvoidWeight = avoid.value * this.Multiplier;
+		World.Instance.TimeScale = (int) timeScale.value;
 		Game.instance.State = 1;
 	}
 }

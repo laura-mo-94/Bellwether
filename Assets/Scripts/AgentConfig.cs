@@ -48,7 +48,6 @@ public class AgentConfig : MonoBehaviour
 		this.AllignmentWeight = Random.Range(0, AgentConfig.MaxWeight);
 		this.WanderWeight = Random.Range(0, AgentConfig.MaxWeight);
 		this.AvoidWeight = Random.Range(0, AgentConfig.MaxWeight);
-
 		// Smooth Movement
 		this.Jitter = Random.Range(0, AgentConfig.MaxWeight);
 		this.WanderDistanceRadius = Random.Range(0, AgentConfig.MaxRadius);
